@@ -1,0 +1,61 @@
+<%- include('../partials/head') %>
+<section class="narrow wide">
+  <h1 class="title small-title"><%= heading %></h1>
+  <% if (problem) { %><p class="error"><%= problem %></p><% } %>
+  <form action="<%= action %>" method="POST">
+    <label>Brand
+      <select name="brand" required>
+        <option value="">Choose a brand</option>
+        <% brands.forEach(b => { %>
+          <option value="<%= b._id %>" <%= String(foundation.brand && foundation.brand._id || foundation.brand) === String(b._id) ? 'selected' : '' %>><%= b.name %></option>
+        <% }) %>
+      </select>
+    </label>
+    <label>Product line <input type="text" name="productLine" value="<%= foundation.productLine || '' %>" required></label>
+    <label>Product type (optional)
+      <select name="productType">
+        <option value="">Not set</option>
+        <% PRODUCT_TYPES.forEach(p => { %><option value="<%= p %>" <%= foundation.productType === p ? 'selected' : '' %>><%= p %></option><% }) %>
+      </select>
+    </label>
+    <label>Shade name or code (exactly as the brand writes it) <input type="text" name="shadeName" value="<%= foundation.shadeName || '' %>" required></label>
+    <label>Brand depth label (exact wording, optional) <input type="text" name="brandDepthLabel" value="<%= foundation.brandDepthLabel || '' %>"></label>
+    <label>Brand undertone (exact wording or code, optional) <input type="text" name="brandUndertone" value="<%= foundation.brandUndertone || '' %>"></label>
+
+    <fieldset>
+      <legend>Proposed swatch matches (at least one)</legend>
+      <% slots.forEach((s, i) => { %>
+        <div class="slot">
+          <select name="matchLevel" aria-label="Swatch <%= i + 1 %>">
+            <option value="">Swatch <%= i + 1 %> (none)</option>
+            <% tones.forEach(t => { %><option value="<%= t.level %>" <%= String(s.level) === String(t.level) ? 'selected' : '' %>><%= t.name %></option><% }) %>
+          </select>
+          <select name="matchConfidence" aria-label="Confidence <%= i + 1 %>">
+            <% CONFIDENCES.forEach(c => { %><option value="<%= c %>" <%= s.confidence === c ? 'selected' : '' %>><%= c %></option><% }) %>
+          </select>
+          <input type="text" name="matchBasis" value="<%= s.basis || '' %>" placeholder="Basis: why this range" aria-label="Basis <%= i + 1 %>">
+        </div>
+      <% }) %>
+    </fieldset>
+
+    <label>Official product page link <input type="text" name="productUrl" value="<%= foundation.productUrl || '' %>" placeholder="https://..."></label>
+    <label>Link to this exact shade (optional, only if the brand's site has one) <input type="text" name="shadeUrl" value="<%= foundation.shadeUrl || '' %>" placeholder="https://..."></label>
+    <label>Shade source link <input type="text" name="shadeSourceUrl" value="<%= foundation.shadeSourceUrl || '' %>" placeholder="https://..."></label>
+    <label>Image link (optional, only if you're allowed to use it) <input type="text" name="imageUrl" value="<%= foundation.imageUrl || '' %>" placeholder="https://..."></label>
+    <label>Source coverage <input type="text" name="sourceCoverage" value="<%= foundation.sourceCoverage || '' %>" placeholder="Complete product list captured; 51"></label>
+    <label>Availability note <input type="text" name="availabilityNote" value="<%= foundation.availabilityNote || '' %>"></label>
+    <label>Date source was checked
+      <input type="date" name="checkedAt" value="<%= foundation.checkedAt ? new Date(foundation.checkedAt).toISOString().slice(0, 10) : (typeof foundation.checkedAt === 'string' ? foundation.checkedAt : '') %>">
+    </label>
+    <label>Review status
+      <select name="reviewStatus">
+        <% STATUSES.forEach(s => { %><option value="<%= s %>" <%= (foundation.reviewStatus || 'needs-review') === s ? 'selected' : '' %>><%= s %></option><% }) %>
+      </select>
+    </label>
+    <div class="actions">
+      <button class="btn" type="submit">Save</button>
+      <a class="btn btn-plain" href="/admin/foundations">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../partials/foot') %>

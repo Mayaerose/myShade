@@ -1,0 +1,65 @@
+<%- include('partials/head') %>
+<div class="range-head" style="--hex: <%= tone.hex %>; --ink: <%= tone.level >= 6 ? '#fff' : '#000' %>">
+  <span class="chip-name"><%= tone.name %></span>
+  <span class="chip-number"><%= tone.number %></span>
+  <span class="chip-hex"><%= tone.hex %></span>
+</div>
+
+<% if (preview) { %>
+  <p class="error">Admin preview: this list includes shades that are still marked needs-review.</p>
+<% } %>
+
+<% if (brandCount === 0) { %>
+  <p class="count">No reviewed matches yet for this range.</p>
+  <p class="center small">Try a neighboring swatch<% if (neighbors.length) { %>: <%= neighbors.map(n => n.name).join(' or ') %><% } %>.</p>
+<% } else { %>
+  <p class="count"><%= brandCount %> <%= brandCount === 1 ? 'brand' : 'brands' %> in this catalog <%= brandCount === 1 ? 'has' : 'have' %> a recommendation for <%= tone.name %></p>
+<% } %>
+<p class="center small">Shade matches just for you!</p>
+
+<div class="actions">
+  <a class="btn btn-plain" href="/">Pick another swatch</a>
+  <% neighbors.forEach(n => { %>
+    <a class="btn btn-plain" href="/matches?toneLevel=<%= n.level %><%= preview ? '&includeReview=1' : '' %>"><%= n.name %></a>
+  <% }) %>
+  <% if (user && !isSaved) { %>
+    <form action="/profile/tone" method="POST">
+      <input type="hidden" name="toneLevel" value="<%= tone.level %>">
+      <button class="btn btn-plain" type="submit">Save as my swatch</button>
+    </form>
+  <% } else if (user && isSaved) { %>
+    <span class="small">This is your saved swatch</span>
+  <% } else { %>
+    <span class="small"><a href="/login">Log in</a> to save your swatch</span>
+  <% } %>
+  <% if (user && user.role === 'admin' && !preview) { %>
+    <a class="btn btn-plain" href="/matches?toneLevel=<%= tone.level %>&includeReview=1">Admin: include needs-review</a>
+  <% } %>
+</div>
+
+<% brands.forEach(group => { %>
+  <section class="brand-block">
+    <h2><a href="/brands/<%= group.brand.slug %>"><%= group.brand.name %></a> <span class="small">(<%= group.shades.length %> <%= group.shades.length === 1 ? 'shade' : 'shades' %>)</span></h2>
+    <% group.shades.forEach(f => {
+         const match = f.toneMatches.find(m => m.level === level) %>
+      <article class="shade-row">
+        <% if (f.imageUrl) { %><img src="<%= f.imageUrl %>" alt="<%= f.shadeName %>" loading="lazy"><% } %>
+        <div>
+          <p class="shade"><%= f.shadeName %><% if (f.reviewStatus !== 'approved') { %> <span class="badge"><%= f.reviewStatus %></span><% } %></p>
+          <p class="meta">
+            <%= f.productLine %><% if (f.productType) { %> &middot; <%= f.productType %><% } %>
+            <% if (f.brandDepthLabel || f.brandUndertone) { %><br>Brand wording: <%= [f.brandDepthLabel, f.brandUndertone].filter(Boolean).join(' / ') %><% } %>
+            <% if (match) { %><br>Our match: <%= match.confidence %> confidence<% } %>
+          </p>
+          <p class="meta links">
+            <% if (f.shadeUrl) { %><a href="<%= f.shadeUrl %>" target="_blank" rel="noopener noreferrer">This shade</a><% } %>
+            <% if (f.productUrl) { %><a href="<%= f.productUrl %>" target="_blank" rel="noopener noreferrer">Product page</a><% } %>
+            <% if (f.shadeSourceUrl) { %><a href="<%= f.shadeSourceUrl %>" target="_blank" rel="noopener noreferrer">Shade source</a><% } %>
+          </p>
+          <% if (!f.shadeUrl && f.productUrl) { %><p class="meta note">On the product page, choose the shade named &ldquo;<%= f.shadeName %>&rdquo; (the page may open on a different one).</p><% } %>
+        </div>
+      </article>
+    <% }) %>
+  </section>
+<% }) %>
+<%- include('partials/foot') %>

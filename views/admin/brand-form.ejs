@@ -1,0 +1,16 @@
+<%- include('../partials/head') %>
+<section class="narrow">
+  <h1 class="title small-title"><%= heading %></h1>
+  <% if (problem) { %><p class="error"><%= problem %></p><% } %>
+  <form action="<%= action %>" method="POST">
+    <label>Brand name <input type="text" name="name" value="<%= brand.name || '' %>" required></label>
+    <label>Slug (the web address part, optional) <input type="text" name="slug" value="<%= brand.slug || '' %>" placeholder="made from the name if blank"></label>
+    <label>Website (optional) <input type="text" name="websiteUrl" value="<%= brand.websiteUrl || '' %>" placeholder="https://..."></label>
+    <label class="check"><input type="checkbox" name="isActive" <%= brand.isActive ? 'checked' : '' %>> Active (shown to the public)</label>
+    <div class="actions">
+      <button class="btn" type="submit">Save</button>
+      <a class="btn btn-plain" href="/admin/brands">Cancel</a>
+    </div>
+  </form>
+</section>
+<%- include('../partials/foot') %>

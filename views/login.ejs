@@ -1,0 +1,12 @@
+<%- include('partials/head') %>
+<section class="narrow">
+  <h1 class="title">myShade</h1>
+  <p class="center">Log in to save your swatch. You can use the shade finder without an account.</p>
+  <form action="/login" method="POST">
+    <label>Email <input type="email" name="email" required autocomplete="email"></label>
+    <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn" type="submit">Log in</button>
+  </form>
+  <p class="center small">New here? <a href="/signup">Sign up</a></p>
+</section>
+<%- include('partials/foot') %>

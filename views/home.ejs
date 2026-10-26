@@ -1,0 +1,27 @@
+<%- include('partials/head') %>
+<div class="home">
+  <section class="home-left">
+    <h1 class="title">Find your shade</h1>
+    <p>Pick the swatch that best matches you and see what brands hold your perfect shade match.</p>
+
+    <form action="/matches" method="POST" class="tones">
+      <% tones.forEach(t => { %>
+        <label class="swatch" style="--hex: <%= t.hex %>; --ink: <%= t.level >= 6 ? '#fff' : '#000' %>">
+          <input type="radio" name="toneLevel" value="<%= t.level %>" required <%= selected === t.level ? 'checked' : '' %>>
+          <span class="chip">
+            <span class="chip-name"><%= t.name %></span>
+            <span class="chip-number"><%= t.number %></span>
+            <span class="chip-hex"><%= t.hex %></span>
+          </span>
+        </label>
+      <% }) %>
+      <div class="actions"><button class="btn" type="submit">See matches</button></div>
+    </form>
+    <p class="small">Try out the shades next to it and see how you feel!</p>
+  </section>
+
+  <aside class="home-photo">
+    <img src="/assets/home-photo.jpg" alt="Two friends laughing with their faces pressed together">
+  </aside>
+</div>
+<%- include('partials/foot') %>

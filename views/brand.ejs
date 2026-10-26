@@ -1,0 +1,31 @@
+<%- include('partials/head') %>
+<h1 class="title"><%= brand.name %></h1>
+<% if (brand.websiteUrl) { %><p class="center"><a href="<%= brand.websiteUrl %>" target="_blank" rel="noopener noreferrer"><%= brand.websiteUrl.replace(/^https?:\/\//, '') %></a></p><% } %>
+<% if (foundations.length === 0) { %>
+  <p class="center">No reviewed shades for this brand yet.</p>
+<% } %>
+<div class="table-wrap">
+<% if (foundations.length) { %>
+<table>
+  <thead><tr><th>Product line</th><th>Shade</th><th>Brand wording</th><th>Our swatch match</th><th>Links</th></tr></thead>
+  <tbody>
+    <% foundations.forEach(f => { %>
+      <tr>
+        <td><%= f.productLine %></td>
+        <td><%= f.shadeName %><% if (f.reviewStatus !== 'approved') { %> <span class="badge"><%= f.reviewStatus %></span><% } %></td>
+        <td><%= [f.brandDepthLabel, f.brandUndertone].filter(Boolean).join(' / ') %></td>
+        <td><%= f.toneMatches.map(m => tones[m.level - 1].name + ' (' + m.confidence + ')').join(', ') %></td>
+        <td class="row-actions">
+          <% if (f.shadeUrl) { %><a href="<%= f.shadeUrl %>" target="_blank" rel="noopener noreferrer">This shade</a><% } %>
+          <% if (f.productUrl) { %><a href="<%= f.productUrl %>" target="_blank" rel="noopener noreferrer">Product page</a><% } %>
+          <% if (f.shadeSourceUrl) { %><a href="<%= f.shadeSourceUrl %>" target="_blank" rel="noopener noreferrer">Source</a><% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% } %>
+</div>
+<p class="center small">Swatch matches are our estimates, not brand-certified equivalents.</p>
+<p class="center"><a class="btn btn-plain" href="/">Back to the finder</a></p>
+<%- include('partials/foot') %>

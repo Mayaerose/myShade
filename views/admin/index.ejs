@@ -1,0 +1,29 @@
+<%- include('../partials/head') %>
+<h1 class="title">Admin</h1>
+<div class="actions">
+  <a class="btn" href="/admin/foundations?status=needs-review">Review shades</a>
+  <a class="btn btn-plain" href="/admin/foundations/new">Add a shade</a>
+  <a class="btn btn-plain" href="/admin/brands">Brands</a>
+</div>
+
+<p class="count">Brands: <%= activeBrandCount %> active of <%= brandCount %> &middot;
+  Shades: <%= statusCounts.approved %> approved, <%= statusCounts['needs-review'] %> needs review, <%= statusCounts.inactive %> inactive</p>
+
+<h2 class="section">Distinct brands per swatch</h2>
+<p class="small center">The goal is 8 to 10 approved brands in every swatch. Brands are counted once, not once per shade.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Swatch</th><th>Approved brands</th><th>Needs-review brands</th><th></th></tr></thead>
+  <tbody>
+    <% perRange.forEach(r => { %>
+      <tr>
+        <td><span class="dot" style="background: <%= r.tone.hex %>"></span> <%= r.tone.name %></td>
+        <td><%= r.approved %> <%= r.approved >= 8 ? '' : '(below 8)' %></td>
+        <td><%= r.needsReview %></td>
+        <td class="row-actions"><a class="btn btn-plain btn-small" href="/admin/foundations?level=<%= r.tone.level %>">See shades</a></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+<%- include('../partials/foot') %>

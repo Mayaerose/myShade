@@ -1,0 +1,11 @@
+<%- include('partials/head') %>
+<section class="narrow">
+  <h1 class="title">Join myShade</h1>
+  <form action="/signup" method="POST">
+    <label>Email <input type="email" name="email" required autocomplete="email"></label>
+    <label>Password (6+ characters) <input type="password" name="password" required minlength="6" autocomplete="new-password"></label>
+    <button class="btn" type="submit">Sign up</button>
+  </form>
+  <p class="center small">Already have an account? <a href="/login">Log in</a></p>
+</section>
+<%- include('partials/foot') %>

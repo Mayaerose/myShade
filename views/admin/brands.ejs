@@ -1,0 +1,26 @@
+<%- include('../partials/head') %>
+<h1 class="title">Brands</h1>
+<div class="actions"><a class="btn" href="/admin/brands/new">Add a brand</a></div>
+<p class="count"><%= brands.length %> brands</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Name</th><th>Website</th><th>Shades</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    <% brands.forEach(b => { %>
+      <tr>
+        <td><%= b.name %></td>
+        <td><% if (b.websiteUrl) { %><a href="<%= b.websiteUrl %>" target="_blank" rel="noopener noreferrer"><%= b.websiteUrl.replace(/^https?:\/\//, '') %></a><% } %></td>
+        <td><%= countOf[String(b._id)] || 0 %></td>
+        <td><%= b.isActive ? 'active' : 'inactive' %></td>
+        <td class="row-actions">
+          <a class="btn btn-plain btn-small" href="/admin/brands/<%= b._id %>/edit">Edit</a>
+          <form action="/admin/brands/<%= b._id %>/delete" method="POST" onsubmit="return confirm('Remove this brand? If it has shades it will be deactivated instead.')">
+            <button class="btn btn-plain btn-small" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+<%- include('../partials/foot') %>

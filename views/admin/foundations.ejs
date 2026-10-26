@@ -1,0 +1,61 @@
+<%- include('../partials/head') %>
+<h1 class="title">Shades</h1>
+<div class="actions">
+  <a class="btn" href="/admin/foundations/new">Add a shade</a>
+  <form method="GET" action="/admin/foundations" class="inline filters">
+    <select name="brand" aria-label="Brand">
+      <option value="">All brands</option>
+      <% brands.forEach(b => { %><option value="<%= b._id %>" <%= filters.brand === String(b._id) ? 'selected' : '' %>><%= b.name %></option><% }) %>
+    </select>
+    <select name="level" aria-label="Swatch">
+      <option value="">All swatches</option>
+      <% tones.forEach(t => { %><option value="<%= t.level %>" <%= filters.level === String(t.level) ? 'selected' : '' %>><%= t.name %></option><% }) %>
+    </select>
+    <select name="status" aria-label="Review status">
+      <option value="">All statuses</option>
+      <% STATUSES.forEach(s => { %><option value="<%= s %>" <%= filters.status === s ? 'selected' : '' %>><%= s %></option><% }) %>
+    </select>
+    <button class="btn btn-plain btn-small" type="submit">Filter</button>
+  </form>
+</div>
+<p class="count"><%= total %> <%= total === 1 ? 'shade' : 'shades' %></p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Brand</th><th>Shade</th><th>Brand wording</th><th>Swatch match</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    <% foundations.forEach(f => { %>
+      <tr>
+        <td><%= f.brand ? f.brand.name : '(missing brand)' %></td>
+        <td><%= f.shadeName %><br><span class="small"><%= f.productLine %></span></td>
+        <td><%= [f.brandDepthLabel, f.brandUndertone].filter(Boolean).join(' / ') %></td>
+        <td><%= f.toneMatches.map(m => tones[m.level - 1].name + ' (' + m.confidence + ')').join(', ') %></td>
+        <td><span class="badge"><%= f.reviewStatus %></span></td>
+        <td class="row-actions">
+          <% if (f.reviewStatus !== 'approved') { %>
+            <form action="/admin/foundations/<%= f._id %>/status" method="POST">
+              <input type="hidden" name="status" value="approved">
+              <input type="hidden" name="back" value="/admin/foundations<%= queryString ? '?' + queryString : '' %>">
+              <button class="btn btn-small" type="submit">Approve</button>
+            </form>
+          <% } %>
+          <a class="btn btn-plain btn-small" href="/admin/foundations/<%= f._id %>/edit">Edit</a>
+          <form action="/admin/foundations/<%= f._id %>/delete" method="POST" onsubmit="return confirm('Remove this shade?')">
+            <button class="btn btn-plain btn-small" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+    <% if (foundations.length === 0) { %><tr><td colspan="6" class="center">Nothing here yet.</td></tr><% } %>
+  </tbody>
+</table>
+</div>
+
+<% if (pages > 1) { %>
+  <p class="center">
+    <% if (page > 1) { %><a href="/admin/foundations?page=<%= page - 1 %><%= queryString ? '&' + queryString : '' %>">&larr; Previous</a><% } %>
+    Page <%= page %> of <%= pages %>
+    <% if (page < pages) { %><a href="/admin/foundations?page=<%= page + 1 %><%= queryString ? '&' + queryString : '' %>">Next &rarr;</a><% } %>
+  </p>
+<% } %>
+<%- include('../partials/foot') %>
