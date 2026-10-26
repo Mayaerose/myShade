@@ -36,9 +36,7 @@ This is a full stack app I built to practice CRUD, authentication, and working w
 - MongoDB with Mongoose
 - EJS
 - Passport (passport-local)
-- express-session and connect-mongo
-- dotenv
-- csv-parse
+- express and connect-mongo
 
 ## About the Data
 
@@ -117,7 +115,7 @@ The routes:
 - How to import a CSV without overwriting my edits
 - How to be honest about what a data set can and can't tell you
 
-VIEW APP HERE: 
+VIEW APP HERE: https://myshade.onrender.com
 
 ## Author
 
