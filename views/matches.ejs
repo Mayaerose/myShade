@@ -40,23 +40,16 @@
 <% brands.forEach(group => { %>
   <section class="brand-block">
     <h2><a href="/brands/<%= group.brand.slug %>"><%= group.brand.name %></a> <span class="small">(<%= group.shades.length %> <%= group.shades.length === 1 ? 'shade' : 'shades' %>)</span></h2>
-    <% group.shades.forEach(f => {
-         const match = f.toneMatches.find(m => m.level === level) %>
+    <% group.shades.forEach(f => { %>
       <article class="shade-row">
         <% if (f.imageUrl) { %><img src="<%= f.imageUrl %>" alt="<%= f.shadeName %>" loading="lazy"><% } %>
         <div>
           <p class="shade"><%= f.shadeName %><% if (f.reviewStatus !== 'approved') { %> <span class="badge"><%= f.reviewStatus %></span><% } %></p>
-          <p class="meta">
-            <%= f.productLine %><% if (f.productType) { %> &middot; <%= f.productType %><% } %>
-            <% if (f.brandDepthLabel || f.brandUndertone) { %><br>Brand wording: <%= [f.brandDepthLabel, f.brandUndertone].filter(Boolean).join(' / ') %><% } %>
-            <% if (match) { %><br>Our match: <%= match.confidence %> confidence<% } %>
-          </p>
           <p class="meta links">
             <% if (f.shadeUrl) { %><a href="<%= f.shadeUrl %>" target="_blank" rel="noopener noreferrer">This shade</a><% } %>
             <% if (f.productUrl) { %><a href="<%= f.productUrl %>" target="_blank" rel="noopener noreferrer">Product page</a><% } %>
             <% if (f.shadeSourceUrl) { %><a href="<%= f.shadeSourceUrl %>" target="_blank" rel="noopener noreferrer">Shade source</a><% } %>
           </p>
-          <% if (!f.shadeUrl && f.productUrl) { %><p class="meta note">On the product page, choose the shade named &ldquo;<%= f.shadeName %>&rdquo; (the page may open on a different one).</p><% } %>
         </div>
       </article>
     <% }) %>
